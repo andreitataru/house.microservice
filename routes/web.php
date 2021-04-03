@@ -27,6 +27,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('getHouseById/{id}', 'HouseController@getHouseById');   
     $router->post('updateHouse', 'HouseController@updateHouse');
     $router->get('deleteHouseById/{id}', 'HouseController@deleteHouseById');
+    $router->post('getHousesWithFilter', 'HouseController@getHousesWithFilter');
 
 
 });

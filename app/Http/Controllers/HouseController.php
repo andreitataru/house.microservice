@@ -150,4 +150,29 @@ class HouseController extends Controller
 
     }
 
+    public function getHousesWithFilter(Request $request)
+    {
+        $houses = House::all();
+
+
+        if ($request->filled('location')){
+            $houses = $houses->where('location', $request->location);
+        }
+        if ($request->filled('rent')){
+            $houses = $houses->where('rent', '<=', $request->rent);
+        }
+        if ($request->filled('maxPeopleNum')){
+            $houses = $houses->where('maxPeopleNum', '<=', $request->maxPeopleNum);
+        }
+        if ($request->filled('roomsNum')){
+            $houses = $houses->where('roomsNum', '<=', $request->roomsNum);
+        }
+        if ($request->filled('area')){
+            $houses = $houses->where('area', $request->area);
+        }
+
+        return $houses;
+
+    }
+
 }
