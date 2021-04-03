@@ -132,7 +132,21 @@ class HouseController extends Controller
                 'status' => 'House Updated'
             ], 200);
         }
+    }
 
+
+    public function deleteHouseById($id)
+    {
+        $house = House::findOrFail($id);
+
+        if(!$house->delete()) {
+            throw new HttpException(500);
+        }
+        else {
+            return response()->json([
+                'status' => 'House deleted'
+            ], 200);
+        }
 
     }
 
