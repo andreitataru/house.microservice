@@ -22,6 +22,10 @@ $router->get('/', function () use ($router) {
 // API route group
 $router->group(['prefix' => 'api'], function () use ($router) {
 
-    $router->post('addHouse', 'MessageController@addHouse');
+    $router->post('addHouse', 'HouseController@addHouse');
+    $router->get('getAllHouses', 'HouseController@getAllHouses');
+    $router->get('getHouseById/{id}', 'HouseController@getHouseById');   
+    $router->post('updateHouse', 'HouseController@updateHouse');
+
 
 });

@@ -17,7 +17,7 @@ class CreateHousesTable extends Migration
             $table->id();
             $table->string('address');
             $table->string('location');
-            $table->string('coordenates');
+            $table->string('coordinates');
             $table->double('rent', 8, 2);
             $table->integer('maxPeopleNum');
             $table->integer('roomsNum');
