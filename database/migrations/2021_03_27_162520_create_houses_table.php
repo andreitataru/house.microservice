@@ -29,6 +29,7 @@ class CreateHousesTable extends Migration
             $table->decimal('rating', $precision = 1, $scale = 1)->default(0); //0-5
             $table->integer('timesRated')->default(0);
             $table->date('dateAvailable');
+            $table->string('pictures')->default("");
             $table->timestamps();
         });
     }

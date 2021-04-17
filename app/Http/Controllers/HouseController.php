@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 use App\Models\House;
 use Illuminate\Http\Request;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\File;
 
 class HouseController extends Controller
 {
@@ -52,6 +54,28 @@ class HouseController extends Controller
 
             $house->dateAvailable = $request->dateAvailable; //ano/mes/dia
             $house->save();
+            
+            if ($request->filled("pictures")){
+                $pathToMake = "uploads/houses/" . $house->id;
+                if(!File::isDirectory($pathToMake)){
+                    File::makeDirectory($pathToMake, 0777, true, true);
+                    $picturesList = explode(" ", $request->pictures);
+                    $id = 0;
+                    foreach ($picturesList as $file) {
+                        $path = $pathToMake . "/" . $id . ".jpg";
+                        Image::make(file_get_contents($file))->save($path); 
+                        if ($house->pictures == ""){
+                            $house->pictures = url('/') . '/' . $path;
+                        }
+                        else {
+                            $house->pictures = $house->pictures . " " . url('/') . '/' . $path;
+                        }
+                        $house->save();
+                        $id++;
+                    }
+                }
+            }
+            
             
             //return successful response
             return response()->json(['house' => $house, 'message' => 'CREATED'], 201);
@@ -123,6 +147,14 @@ class HouseController extends Controller
         if ($request->filled('dateAvailable')){
             $house->dateAvailable = $request->dateAvailable;
         }
+        if ($request->filled('picture')){
+            $picture = explode(" ", $request->picture);
+            $id = $picture[0];
+            $base64 = $picture[1];
+            $path = "uploads/houses/" . $request->houseId . "/" . $id . ".jpg";
+            Image::make(file_get_contents($base64))->save($path); 
+
+        }
 
         if(!$house->save()) {
             throw new HttpException(500);
@@ -170,7 +202,16 @@ class HouseController extends Controller
         if ($request->filled('area')){
             $houses = $houses->where('area', $request->area);
         }
-
+        if ($request->filled('houseType')){
+            $houses = $houses->where('houseType', $request->houseType);
+        }
+        if ($request->filled('spaceType')){
+            $houses = $houses->where('spaceType', $request->spaceType);
+        }
+        if ($request->filled('rating')){
+            $houses = $houses->where('rating', '>=' ,$request->rating);
+        }
+ 
         return $houses;
 
     }

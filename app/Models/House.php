@@ -13,7 +13,7 @@ class House extends Model
      */
     protected $fillable = [
         'address', 'location', 'coordinates', 'rent', 'maxPeopleNum', 'roomsNum', 'area', 'houseType', 'spaceType', 
-        'description', 'houseRules', 'rating', 'timesRated', 'dateAvailable'
+        'description', 'houseRules', 'rating', 'timesRated', 'dateAvailable', 'pictures'
     ];
 
 }
