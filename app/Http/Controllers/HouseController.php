@@ -33,11 +33,9 @@ class HouseController extends Controller
             'houseType' => 'required',
             'spaceType' => 'required',
             'description' => 'required',
-            'houseRules' => 'required',
             'dateAvailable' => 'required',
         ]);
-
-
+        
         try {
             $house = new House;
             $house->address = $request->address;
@@ -50,7 +48,16 @@ class HouseController extends Controller
             $house->houseType = $request->houseType;
             $house->spaceType = $request->spaceType;
             $house->description = $request->description;
-            $house->houseRules = $request->houseRules;
+
+            if ($request->filled("commodities")){
+                $house->commodities = $request->commodities;
+            }
+            if ($request->filled("houseRules")){
+                $house->houseRules = $request->houseRules;
+            }
+            if ($request->filled("installations")){
+                $house->installations = $request->installations;
+            }
 
             $house->dateAvailable = $request->dateAvailable; //ano/mes/dia
             $house->save();
@@ -141,8 +148,14 @@ class HouseController extends Controller
         if ($request->filled('description')){
             $house->description = $request->description;
         }
+        if ($request->filled('commodities')){
+            $house->commodities = $request->commodities;
+        }
         if ($request->filled('houseRules')){
             $house->houseRules = $request->houseRules;
+        }
+        if ($request->filled('installations')){
+            $house->installations = $request->installations;
         }
         if ($request->filled('dateAvailable')){
             $house->dateAvailable = $request->dateAvailable;

@@ -25,7 +25,9 @@ class CreateHousesTable extends Migration
             $table->string('houseType');
             $table->string('spaceType');
             $table->string('description');
+            $table->string('commodities');
             $table->string('houseRules');
+            $table->string('installations');
             $table->decimal('rating', $precision = 1, $scale = 1)->default(0); //0-5
             $table->integer('timesRated')->default(0);
             $table->date('dateAvailable');
