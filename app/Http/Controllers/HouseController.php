@@ -38,6 +38,7 @@ class HouseController extends Controller
         
         try {
             $house = new House;
+            $house->hostId = $request->hostId;
             $house->address = $request->address;
             $house->location = $request->location;
             $house->coordinates = $request->coordinates;
@@ -58,8 +59,8 @@ class HouseController extends Controller
             if ($request->filled("installations")){
                 $house->installations = $request->installations;
             }
-
             $house->dateAvailable = $request->dateAvailable; //ano/mes/dia
+            
             $house->save();
             
             if ($request->filled("pictures")){

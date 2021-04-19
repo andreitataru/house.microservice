@@ -15,6 +15,7 @@ class CreateHousesTable extends Migration
     {
         Schema::create('houses', function (Blueprint $table) {
             $table->id();
+            $table->integer('hostId');
             $table->string('address');
             $table->string('location');
             $table->string('coordinates');
@@ -25,9 +26,9 @@ class CreateHousesTable extends Migration
             $table->string('houseType');
             $table->string('spaceType');
             $table->string('description');
-            $table->string('commodities');
-            $table->string('houseRules');
-            $table->string('installations');
+            $table->string('commodities')->default("");
+            $table->string('houseRules')->default("");
+            $table->string('installations')->default("");
             $table->decimal('rating', $precision = 1, $scale = 1)->default(0); //0-5
             $table->integer('timesRated')->default(0);
             $table->date('dateAvailable');

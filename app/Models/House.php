@@ -12,7 +12,7 @@ class House extends Model
      * @var array
      */
     protected $fillable = [
-        'address', 'location', 'coordinates', 'rent', 'maxPeopleNum', 'roomsNum', 'area', 'houseType', 'spaceType', 
+        'hostId', 'address', 'location', 'coordinates', 'rent', 'maxPeopleNum', 'roomsNum', 'area', 'houseType', 'spaceType', 
         'description', 'commodities', 'houseRules', 'installations', 'rating', 'timesRated', 'dateAvailable', 'pictures'
     ];
 
