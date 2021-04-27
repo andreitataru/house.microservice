@@ -70,7 +70,7 @@ class HouseController extends Controller
                     $picturesList = explode(" ", $request->pictures);
                     $id = 0;
                     foreach ($picturesList as $file) {
-                        $path = $pathToMake . "/" . $id . ".jpg";
+                        $path = $pathToMake . "/" . $id . ".jpeg";
                         Image::make(file_get_contents($file))->save($path); 
                         if ($house->pictures == ""){
                             $house->pictures = url('/') . '/' . $path;
