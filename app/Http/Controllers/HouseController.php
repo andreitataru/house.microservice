@@ -23,6 +23,8 @@ class HouseController extends Controller
 
         //validate incoming request 
         $this->validate($request, [
+            'title' => 'required',
+            'hostId' => 'required',
             'address' => 'required',
             'location' => 'required',
             'coordinates' => 'required',
@@ -38,6 +40,7 @@ class HouseController extends Controller
         
         try {
             $house = new House;
+            $house->title = $request->title;
             $house->hostId = $request->hostId;
             $house->address = $request->address;
             $house->location = $request->location;
@@ -49,6 +52,10 @@ class HouseController extends Controller
             $house->houseType = $request->houseType;
             $house->spaceType = $request->spaceType;
             $house->description = $request->description;
+
+            if ($request->filled("closeServices")){
+                $house->closeServices = $request->closeServices;
+            }
 
             if ($request->filled("commodities")){
                 $house->commodities = $request->commodities;
@@ -98,7 +105,7 @@ class HouseController extends Controller
     public function getAllHouses(Request $request)
     {   
 
-         return response()->json(['users' =>  House::all()], 200);
+         return response()->json(['houses' =>  House::all()], 200);
     }
 
     public function getHouseById($id)
@@ -119,6 +126,9 @@ class HouseController extends Controller
         $house = House::where('id' , '=' , $request->houseId)->first();
 
         //so altera o que receber no request (filled)
+        if ($request->filled('title')){
+            $house->title = $request->title;
+        }
         if ($request->filled('address')){
             $house->address = $request->address;
         }
@@ -148,6 +158,9 @@ class HouseController extends Controller
         }
         if ($request->filled('description')){
             $house->description = $request->description;
+        }
+        if ($request->filled('closeServices')){
+            $house->closeServices = $request->closeServices;
         }
         if ($request->filled('commodities')){
             $house->commodities = $request->commodities;
