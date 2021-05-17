@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\House;
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 
 class HouseController extends Controller
@@ -71,24 +72,27 @@ class HouseController extends Controller
             $house->save();
             
             if ($request->filled("pictures")){
-                $pathToMake = "uploads/houses/" . $house->id;
-                if(!File::isDirectory($pathToMake)){
-                    File::makeDirectory($pathToMake, 0777, true, true);
-                    $picturesList = explode(" ", $request->pictures);
-                    $id = 0;
-                    foreach ($picturesList as $file) {
-                        $path = $pathToMake . "/" . $id . ".jpeg";
-                        Image::make(file_get_contents($file))->save($path); 
-                        if ($house->pictures == ""){
-                            $house->pictures = url('/') . '/' . $path;
-                        }
-                        else {
-                            $house->pictures = $house->pictures . " " . url('/') . '/' . $path;
-                        }
-                        $house->save();
-                        $id++;
+                //$pathToMake = "uploads/houses/" . $house->id;
+                $pathToMake = $house->id;
+                //if(!File::isDirectory($pathToMake)){
+                //  File::makeDirectory($pathToMake, 0777, true, true);
+                $picturesList = explode(" ", $request->pictures);
+                $id = 0;
+                foreach ($picturesList as $file) {
+                    $name = $pathToMake . "/" . $id . ".jpeg";
+                    $picture = file_get_contents($file);
+                    Storage::disk('gcs')->put($name, $picture, 'public');
+                    $pictureUrl = Storage::disk('gcs')->url($name);
+                    if ($house->pictures == ""){
+                        $house->pictures = $pictureUrl;
                     }
+                     else {
+                        $house->pictures = $house->pictures . " " . $pictureUrl;
+                    }
+                    $house->save();
+                    $id++;
                 }
+                //}
             }
             
             
@@ -177,10 +181,10 @@ class HouseController extends Controller
         if ($request->filled('picture')){
             $picture = explode(" ", $request->picture);
             $id = $picture[0];
-            $base64 = $picture[1];
-            $path = "uploads/houses/" . $request->houseId . "/" . $id . ".jpg";
-            Image::make(file_get_contents($base64))->save($path); 
-
+            $picture = file_get_contents($picture[1]);
+            $path = $request->houseId . "/" . $id . ".jpeg";
+            Storage::disk('gcs')->put($path, $picture, 'public');
+            //Image::make(file_get_contents($base64))->save($path); 
         }
 
         if(!$house->save()) {
