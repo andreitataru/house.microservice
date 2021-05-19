@@ -206,7 +206,6 @@ class HouseController extends Controller
                 'status' => 'House deleted'
             ], 200);
         }
-
     }
 
     public function getHousesWithFilter(Request $request)
