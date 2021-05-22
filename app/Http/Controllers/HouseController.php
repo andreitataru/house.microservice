@@ -241,15 +241,10 @@ class HouseController extends Controller
 
     }
 
-    public function getHousesWithOwnerId(Request $request)
+    public function getHousesWithOwnerId($id)
     {
-        //suposto dar return a todas as casas com um certo owner
-        //usando o seu Id do owner
+        $houses = House::where('hostId', $id)->get();
+        return response()->json(['houses' => $houses], 200);
     }
 
-    public function getRentersWithHouseFromOwner(Request $request)
-    {
-        //suposto dar return a todos os inquilinos de um certo proprietario
-        //usando o Id do owner
-    }
 }
