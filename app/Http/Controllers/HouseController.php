@@ -212,7 +212,6 @@ class HouseController extends Controller
     {
         $houses = House::all();
 
-
         if ($request->filled('location')){
             $houses = $houses->where('location', $request->location);
         }
@@ -242,4 +241,15 @@ class HouseController extends Controller
 
     }
 
+    public function getHousesWithOwnerId(Request $request)
+    {
+        //suposto dar return a todas as casas com um certo owner
+        //usando o seu Id do owner
+    }
+
+    public function getRentersWithHouseFromOwner(Request $request)
+    {
+        //suposto dar return a todos os inquilinos de um certo proprietario
+        //usando o Id do owner
+    }
 }
