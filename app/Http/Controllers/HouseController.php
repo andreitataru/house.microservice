@@ -201,13 +201,16 @@ class HouseController extends Controller
     public function deleteHouseById($id)
     {
         $house = House::findOrFail($id);
-
         if(!$house->delete()) {
             throw new HttpException(500);
         }
         else {
+            // foreach ($picture as $house->$picture)
+            // $photoId = substr($picture, strrpos($picture, "/"))
+            //     Storage::disk('gcs')->delete('/' . $house->$id . $photoId)
             return response()->json([
-                'status' => 'House deleted'
+                'status' => 'House deleted',
+                'house' => $house
             ], 200);
         }
     }
