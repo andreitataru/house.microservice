@@ -210,13 +210,11 @@ class HouseController extends Controller
                 'status' => 'House deleted'
             ], 200);
         }
-
     }
 
     public function getHousesWithFilter(Request $request)
     {
         $houses = House::all();
-
 
         if ($request->filled('location')){
             $houses = $houses->where('location', $request->location);
@@ -245,6 +243,12 @@ class HouseController extends Controller
  
         return $houses;
 
+    }
+
+    public function getHousesWithOwnerId($id)
+    {
+        $houses = House::where('hostId', $id)->get();
+        return response()->json(['houses' => $houses], 200);
     }
 
 }
