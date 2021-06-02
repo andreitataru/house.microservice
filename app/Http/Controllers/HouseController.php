@@ -5,6 +5,7 @@ use App\Models\House;
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\File;
+use DB;
 
 class HouseController extends Controller
 {
@@ -213,7 +214,8 @@ class HouseController extends Controller
         $houses = House::all();
 
         if ($request->filled('location')){
-            $houses = $houses->where('location', $request->location);
+            $houses = DB::table('houses')
+            ->where(DB::raw('lower(location)'), 'like', '%' . strtolower($request->location) . '%')->get();
         }
         if ($request->filled('rent')){
             $houses = $houses->where('rent', '<=', $request->rent);
@@ -235,6 +237,36 @@ class HouseController extends Controller
         }
         if ($request->filled('rating')){
             $houses = $houses->where('rating', '>=' ,$request->rating);
+        }
+        if ($request->filled('commodities')){
+            $commodities = explode(' ', $request->commodities);
+            foreach ($houses as $key =>$house){
+                foreach ($commodities as &$com) {
+                    if(!str_contains($house->commodities, $com)){
+                        unset($houses[$key]);    
+                    }
+                }
+            }
+        }
+        if ($request->filled('houseRules')){
+            $houseRules = explode(' ', $request->houseRules);
+            foreach ($houses as $key =>$house){
+                foreach ($houseRules as &$hr) {
+                    if(!str_contains($house->houseRules, $hr)){
+                        unset($houses[$key]);    
+                    }
+                }
+            }
+        }
+        if ($request->filled('installations')){
+            $installations = explode(' ', $request->installations);
+            foreach ($houses as $key =>$house){
+                foreach ($installations as &$inst) {
+                    if(!str_contains($house->installations, $inst)){
+                        unset($houses[$key]);    
+                    }
+                }
+            }
         }
  
         return $houses;
