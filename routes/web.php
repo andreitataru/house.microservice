@@ -30,4 +30,6 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('getHousesWithFilter', 'HouseController@getHousesWithFilter');
     $router->get('getHousesWithOwnerId/{id}', 'HouseController@getHousesWithOwnerId');
     $router->post('getRentersWithHouseFromOwner', 'HouseController@getRentersWithHouseFromOwner');
+    $router->post('addInterest', 'HouseController@addInterest');
+    $router->get('getInterestsByHouseId/{id}', 'HouseController@getInterestsByHouseId');
 });

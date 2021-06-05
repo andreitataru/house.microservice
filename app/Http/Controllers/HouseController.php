@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 use App\Models\House;
+use App\Models\Interest;
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\File;
-use DB;
 
 class HouseController extends Controller
 {
@@ -120,7 +120,6 @@ class HouseController extends Controller
 
             return response()->json(['message' => 'house not found!'], 404);
         }
-
     }
 
     public function updateHouse(Request $request){ //recebe id da house
@@ -277,6 +276,46 @@ class HouseController extends Controller
     {
         $houses = House::where('hostId', $id)->get();
         return response()->json(['houses' => $houses], 200);
+    }
+
+    public function addInterest(Request $request)
+    {
+
+        //validate incoming request 
+        $this->validate($request, [
+            'idInterested' => 'required',
+            'idHouse' => 'required',
+            'personName' => 'required',
+
+        ]);
+        
+        try {
+            $interest = new Interest;
+            $interest->idInterested = $request->idInterested;
+            $interest->idHouse = $request->idHouse;
+            $interest->personName = $request->personName;
+            $interest->save();
+            
+            //return successful response
+            return response()->json(['interest' => $interest, 'message' => 'CREATED'], 201);
+
+        } catch (\Exception $e) {
+            //return error message
+            return response()->json(['message' => 'addInterest Failed' + $e], 500);
+        }
+    }
+
+    public function getInterestsByHouseId($id)
+    {
+        try {
+            $interests = Interest::where('idHouse', $id)->get();
+
+            return response()->json(['interests' => $interests], 200);
+
+        } catch (\Exception $e) {
+
+            return response()->json(['message' => 'interests not found!'], 404);
+        }
     }
 
 }
