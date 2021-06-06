@@ -318,4 +318,17 @@ class HouseController extends Controller
         }
     }
 
+    public function getInterestsByUserId($id)
+    {
+        try {
+            $interests = Interest::where('idInterested', $id)->get();
+
+            return response()->json(['interests' => $interests], 200);
+
+        } catch (\Exception $e) {
+
+            return response()->json(['message' => 'interests not found!'], 404);
+        }
+    }
+
 }
