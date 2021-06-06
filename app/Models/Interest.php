@@ -12,7 +12,7 @@ class Interest extends Model
      * @var array
      */
     protected $fillable = [
-        'idInterested', 'idHouse'
+        'idInterested', 'idHouse', 'personName'
     ];
 
 }
