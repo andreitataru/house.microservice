@@ -6,6 +6,7 @@ use App\Models\Interest;
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\File;
+use DB;
 
 class HouseController extends Controller
 {
@@ -212,6 +213,10 @@ class HouseController extends Controller
     {
         $houses = House::all();
 
+        if ($request->filled('address')){
+            $houses = DB::table('houses')
+            ->where(DB::raw('lower(address)'), 'like', '%' . strtolower($request->address) . '%')->get();
+        }
         if ($request->filled('location')){
             $houses = DB::table('houses')
             ->where(DB::raw('lower(location)'), 'like', '%' . strtolower($request->location) . '%')->get();
