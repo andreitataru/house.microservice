@@ -99,7 +99,7 @@ class HouseController extends Controller
 
         } catch (\Exception $e) {
             //return error message
-            return response()->json(['message' => 'addHouse Failed' + $e], 409);
+            return response()->json(['message' => 'addHouse Failed' . $e], 409);
         }
 
     }
