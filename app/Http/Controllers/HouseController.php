@@ -295,18 +295,28 @@ class HouseController extends Controller
         ]);
         
         try {
-            $interest = new Interest;
-            $interest->idInterested = $request->idInterested;
-            $interest->idHouse = $request->idHouse;
-            $interest->personName = $request->personName;
-            $interest->save();
+            if (Interest::where('idInterested', $request->idInterested)->where('idHouse', $request->idHouse)->exists()){
+                $interest = Interest::where('idInterested', $request->idInterested)->where('idHouse', $request->idHouse)->first();
+                $interest->delete();
+                //return successful response
+                return response()->json(['message' => 'Interest removed'], 200);
+            }
+            else{
+                $interest = new Interest;
+                $interest->idInterested = $request->idInterested;
+                $interest->idHouse = $request->idHouse;
+                $interest->personName = $request->personName;
+                $interest->save();
+                
+                //return successful response
+                return response()->json(['interest' => $interest, 'message' => 'CREATED'], 201);
+            }
+
             
-            //return successful response
-            return response()->json(['interest' => $interest, 'message' => 'CREATED'], 201);
 
         } catch (\Exception $e) {
             //return error message
-            return response()->json(['message' => 'addInterest Failed' + $e], 500);
+            return response()->json(['message' => 'addInterest Failed' . $e], 500);
         }
     }
 
