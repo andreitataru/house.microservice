@@ -336,4 +336,33 @@ class HouseController extends Controller
         }
     }
 
+    public function rateHouse(Request $request)
+    {
+        try {
+            $house = House::where('id', $request->idReviewed)->first();
+            $points = $house->rating;
+            if ($house->timesRated == 0){
+                $house->timesRated = 1;
+                $house->rating = (float)$request->rating;
+                $house->save();
+                return response()->json(['message' => 'RATED'], 201);
+            }else{
+                #( CurrentAvg * N + NewRating ) / ( N + 1)
+                $newPoints = ((float)$house->rating * (int)$house->timesRated + (int)$request->rating) / ((int)$house->timesRated + 1);
+                $house->rating = $newPoints;
+                $house->timesRated = (int)$house->timesRated + 1;
+                $house->save();
+                return response()->json(['message' => 'RATED'], 201);
+                
+            }
+            
+            return response()->json(['message' => 'RATED'], 201);
+
+        } catch (\Exception $e) {
+            //return error message
+            return response()->json(['message' => 'Rate Failed' . $e], 409);
+        }
+
+    }
+
 }
