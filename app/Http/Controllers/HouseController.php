@@ -103,7 +103,7 @@ class HouseController extends Controller
 
         } catch (\Exception $e) {
             //return error message
-            return response()->json(['message' => 'addHouse Failed' + $e], 409);
+            return response()->json(['message' => 'addHouse Failed' . $e], 409);
         }
 
     }
@@ -302,18 +302,28 @@ class HouseController extends Controller
         ]);
         
         try {
-            $interest = new Interest;
-            $interest->idInterested = $request->idInterested;
-            $interest->idHouse = $request->idHouse;
-            $interest->personName = $request->personName;
-            $interest->save();
+            if (Interest::where('idInterested', $request->idInterested)->where('idHouse', $request->idHouse)->exists()){
+                $interest = Interest::where('idInterested', $request->idInterested)->where('idHouse', $request->idHouse)->first();
+                $interest->delete();
+                //return successful response
+                return response()->json(['message' => 'Interest removed'], 200);
+            }
+            else{
+                $interest = new Interest;
+                $interest->idInterested = $request->idInterested;
+                $interest->idHouse = $request->idHouse;
+                $interest->personName = $request->personName;
+                $interest->save();
+                
+                //return successful response
+                return response()->json(['interest' => $interest, 'message' => 'CREATED'], 201);
+            }
+
             
-            //return successful response
-            return response()->json(['interest' => $interest, 'message' => 'CREATED'], 201);
 
         } catch (\Exception $e) {
             //return error message
-            return response()->json(['message' => 'addInterest Failed' + $e], 500);
+            return response()->json(['message' => 'addInterest Failed' . $e], 500);
         }
     }
 
@@ -341,6 +351,35 @@ class HouseController extends Controller
 
             return response()->json(['message' => 'interests not found!'], 404);
         }
+    }
+
+    public function rateHouse(Request $request)
+    {
+        try {
+            $house = House::where('id', $request->idReviewed)->first();
+            $points = $house->rating;
+            if ($house->timesRated == 0){
+                $house->timesRated = 1;
+                $house->rating = (float)$request->rating;
+                $house->save();
+                return response()->json(['message' => 'RATED'], 201);
+            }else{
+                #( CurrentAvg * N + NewRating ) / ( N + 1)
+                $newPoints = ((float)$house->rating * (int)$house->timesRated + (int)$request->rating) / ((int)$house->timesRated + 1);
+                $house->rating = $newPoints;
+                $house->timesRated = (int)$house->timesRated + 1;
+                $house->save();
+                return response()->json(['message' => 'RATED'], 201);
+                
+            }
+            
+            return response()->json(['message' => 'RATED'], 201);
+
+        } catch (\Exception $e) {
+            //return error message
+            return response()->json(['message' => 'Rate Failed' . $e], 409);
+        }
+
     }
 
 }

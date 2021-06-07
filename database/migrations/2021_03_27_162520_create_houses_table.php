@@ -31,7 +31,7 @@ class CreateHousesTable extends Migration
             $table->string('commodities')->default("");
             $table->string('houseRules')->default("");
             $table->string('installations')->default("");
-            $table->decimal('rating', $precision = 1, $scale = 1)->default(0); //0-5
+            $table->decimal('rating', $precision = 8, $scale = 2)->default(0); //0-5
             $table->integer('timesRated')->default(0);
             $table->date('dateAvailable');
             $table->string('pictures')->default("");
