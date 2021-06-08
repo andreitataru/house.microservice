@@ -213,13 +213,19 @@ class HouseController extends Controller
     {
         $houses = House::all();
 
-        if ($request->filled('address')){
-            $houses = DB::table('houses')
-            ->where(DB::raw('lower(address)'), 'like', '%' . strtolower($request->address) . '%')->get();
-        }
+
         if ($request->filled('location')){
-            $houses = DB::table('houses')
-            ->where(DB::raw('lower(location)'), 'like', '%' . strtolower($request->location) . '%')->get();
+            
+            DB::table('houses')
+            ->where(function($q) use($request) {
+                $q->where(DB::raw('lower(location)'), 'like', '%' . strtolower($request->location) . '%')
+                ->orWhere(DB::raw('lower(address)'), 'like', '%' . strtolower($request->location) . '%');
+            })
+            ->get();
+
+            
+
+
         }
         if ($request->filled('rent')){
             $houses = $houses->where('rent', '<=', $request->rent);
